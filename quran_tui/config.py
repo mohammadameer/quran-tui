@@ -9,8 +9,10 @@ CACHE_DIR = APP_DIR / "cache"
 STATE_PATH = APP_DIR / "state.json"
 CACHE_PATH = CACHE_DIR / "quran-tui-cache-v1.json"
 
-QURAN_ARABIC_URL = "https://api.alquran.cloud/v1/quran/quran-uthmani"
-QURAN_ENGLISH_URL = "https://api.alquran.cloud/v1/quran/en.asad"
+QURAN_API_BASE = "https://api.quran.com/api/v4"
+QURAN_CHAPTERS_URL = f"{QURAN_API_BASE}/chapters"
+QURAN_VERSES_URL = f"{QURAN_API_BASE}/verses/by_chapter"
+TRANSLATION_ID = 85  # M.A.S. Abdel Haleem (English)
 HTTP_TIMEOUT_SECONDS = 30
 
 MAX_SEARCH_RESULTS = 25
