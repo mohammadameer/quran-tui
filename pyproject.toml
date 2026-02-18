@@ -13,6 +13,8 @@ authors = [{ name = "Quran TUI Contributors" }]
 dependencies = [
   "prompt_toolkit",
   "rapidfuzz",
+  "arabic-reshaper",
+  "python-bidi",
 ]
 
 [project.scripts]

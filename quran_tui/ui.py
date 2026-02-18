@@ -10,6 +10,7 @@ from prompt_toolkit.styles import Style
 from prompt_toolkit.widgets import Frame, TextArea
 
 from .models import Ayah, QuranData, SurahData
+from .rtl import reshape_arabic
 from .search import QuranSearchEngine, SearchResult
 from .state import ReadingState, ReadingStateStore
 
@@ -375,7 +376,7 @@ class QuranTUIApplication:
         output.append(
             (
                 "class:title",
-                f"{surah.name_arabic}\n\n",
+                f"{reshape_arabic(surah.name_arabic)}\n\n",
             )
         )
 
@@ -402,7 +403,7 @@ class QuranTUIApplication:
                     arabic_style = "class:active-ayah-soft"
                     english_style = "class:active-translation-soft"
 
-            output.append((arabic_style, f"{ayah.text_arabic}\n"))
+            output.append((arabic_style, f"{reshape_arabic(ayah.text_arabic)}\n"))
             output.append((english_style, f"{marker} {ayah.ayah_number}. {ayah.text_english}\n\n"))
 
         if end < len(ayahs):
