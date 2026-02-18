@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "quran-tui"
-version = "0.2.0"
+version = "0.3.0"
 description = "Quran TUI with browse, fuzzy search, and resume reading"
 readme = "README.md"
 requires-python = ">=3.10"
