@@ -12,8 +12,24 @@ Quran terminal app with clean, fast navigation.
 - Resume from last reading.
 - Works on common terminals and systems.
 
-## One-line install
+## One-line install (different systems)
 
+Linux/macOS:
+```bash
+python3 -m pip install --user pipx && python3 -m pipx ensurepath && pipx install "git+https://github.com/mohammadameer/quran-cli.git"
+```
+
+Windows PowerShell:
+```powershell
+py -m pip install --user pipx; py -m pipx ensurepath; pipx install "git+https://github.com/mohammadameer/quran-cli.git"
+```
+
+Windows CMD:
+```bat
+py -m pip install --user pipx && py -m pipx ensurepath && pipx install "git+https://github.com/mohammadameer/quran-cli.git"
+```
+
+Local repo (dev/test):
 ```bash
 pipx install .
 ```
@@ -39,4 +55,5 @@ quran-tui
 ## Notes
 
 - First run downloads Quran text from API and caches it locally.
-- Local files are saved in `~/.quran_tui/`.
+- Local files are saved in `~/.quran-tui/`.
+- Old `~/.quran_tui/` data auto-migrates on next run.
