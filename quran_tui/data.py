@@ -12,7 +12,7 @@ from .config import (
     HTTP_TIMEOUT_SECONDS,
     QURAN_CHAPTERS_URL,
     QURAN_VERSES_URL,
-    TRANSLATION_ID,
+    QURAN_TRANSLATIONS_URL,
     ensure_app_dirs,
 )
 from .models import Ayah, QuranData, SurahData
@@ -58,38 +58,50 @@ class QuranRepository:
         tmp_path.replace(self.cache_path)
 
     def _download_data(self) -> QuranData:
+        print("Fetching chapters...", file=sys.stderr)
         chapters = self._fetch_json(QURAN_CHAPTERS_URL)["chapters"]
+
+        print("Fetching Arabic text...", file=sys.stderr)
+        all_verses = self._fetch_json(QURAN_VERSES_URL)["verses"]
+
+        print("Fetching translations...", file=sys.stderr)
+        all_translations = self._fetch_json(QURAN_TRANSLATIONS_URL)["translations"]
+
+        chapter_map = {int(ch["id"]): ch for ch in chapters}
+        verses_by_surah: dict[int, list[tuple[int, str]]] = {}
+        for verse in all_verses:
+            key = verse["verse_key"]
+            surah_num, ayah_num = map(int, key.split(":"))
+            if surah_num not in verses_by_surah:
+                verses_by_surah[surah_num] = []
+            verses_by_surah[surah_num].append((ayah_num, verse.get("text_uthmani", "")))
+
+        translations_list: list[str] = [t.get("text", "") for t in all_translations]
 
         surahs: list[SurahData] = []
         ayahs_flat: list[Ayah] = []
+        translation_idx = 0
 
-        for i, chapter in enumerate(chapters):
-            surah_number = int(chapter["id"])
+        for surah_number in sorted(verses_by_surah.keys()):
+            chapter = chapter_map[surah_number]
             name_arabic = str(chapter["name_arabic"])
             name_english = str(chapter["name_simple"])
             bismillah_pre = bool(chapter.get("bismillah_pre", False))
 
-            print(f"Downloading surah {surah_number}/114...", file=sys.stderr, end="\r")
-
-            verses_url = f"{QURAN_VERSES_URL}/{surah_number}?translations={TRANSLATION_ID}&fields=text_uthmani&per_page=300"
-            verses_data = self._fetch_json(verses_url)
-
             surah_ayahs: list[Ayah] = []
-            for verse in verses_data["verses"]:
-                verse_key = verse["verse_key"]
-                ayah_number = int(verse_key.split(":")[1])
-                text_arabic = str(verse.get("text_uthmani", "")).strip()
-                text_english = ""
-                if verse.get("translations"):
-                    text_english = str(verse["translations"][0].get("text", "")).strip()
+            verses = sorted(verses_by_surah[surah_number], key=lambda x: x[0])
+
+            for ayah_number, text_arabic in verses:
+                text_english = translations_list[translation_idx] if translation_idx < len(translations_list) else ""
+                translation_idx += 1
 
                 ayah = Ayah(
                     surah_number=surah_number,
                     surah_name_arabic=name_arabic,
                     surah_name_english=name_english,
                     ayah_number=ayah_number,
-                    text_arabic=text_arabic,
-                    text_english=text_english,
+                    text_arabic=str(text_arabic).strip(),
+                    text_english=str(text_english).strip(),
                 )
                 surah_ayahs.append(ayah)
                 ayahs_flat.append(ayah)
@@ -104,7 +116,7 @@ class QuranRepository:
                 )
             )
 
-        print(" " * 40, file=sys.stderr, end="\r")
+        print("Done!", file=sys.stderr)
         return QuranData(surahs=surahs, ayahs_flat=ayahs_flat)
 
     def _fetch_json(self, url: str) -> dict[str, Any]:

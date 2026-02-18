@@ -11,7 +11,8 @@ CACHE_PATH = CACHE_DIR / "quran-tui-cache-v1.json"
 
 QURAN_API_BASE = "https://api.quran.com/api/v4"
 QURAN_CHAPTERS_URL = f"{QURAN_API_BASE}/chapters"
-QURAN_VERSES_URL = f"{QURAN_API_BASE}/verses/by_chapter"
+QURAN_VERSES_URL = f"{QURAN_API_BASE}/quran/verses/uthmani"
+QURAN_TRANSLATIONS_URL = f"{QURAN_API_BASE}/quran/translations/85"
 TRANSLATION_ID = 85  # M.A.S. Abdel Haleem (English)
 HTTP_TIMEOUT_SECONDS = 30
 
