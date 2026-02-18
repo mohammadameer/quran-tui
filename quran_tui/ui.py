@@ -423,7 +423,8 @@ class QuranTUIApplication:
             marker = ">" if is_active else " "
             style = "class:result-active" if is_active else "class:result"
             snippet_style = "class:result-active-snippet" if is_active else "class:translation"
-            line = f"{marker} {ayah.surah_number}:{ayah.ayah_number} {ayah.surah_name_english}  (score {result.score:.1f})\n"
+            ref = f"{ayah.surah_number}:{ayah.ayah_number}"
+            line = f"{marker} {ref} {ayah.surah_name_english} (score {result.score:.1f})\n"
             output.append((style, line))
             output.append((snippet_style, f"    {result.preview}\n\n"))
 

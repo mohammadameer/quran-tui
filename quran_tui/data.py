@@ -119,15 +119,26 @@ class QuranRepository:
         print("Done!", file=sys.stderr)
         return QuranData(surahs=surahs, ayahs_flat=ayahs_flat)
 
-    def _fetch_json(self, url: str) -> dict[str, Any]:
-        request = Request(url, headers={"User-Agent": "quran-tui/0.1"})
-        try:
-            with urlopen(request, timeout=HTTP_TIMEOUT_SECONDS) as response:
-                payload = response.read().decode("utf-8")
-        except (URLError, TimeoutError) as exc:
-            raise RuntimeError(f"Could not fetch data from {url}") from exc
+    def _fetch_json(self, url: str, retries: int = 3) -> dict[str, Any]:
+        request = Request(url, headers={"User-Agent": "quran-tui/1.0"})
+        last_error = None
 
-        return json.loads(payload)
+        for attempt in range(retries):
+            try:
+                with urlopen(request, timeout=HTTP_TIMEOUT_SECONDS) as response:
+                    payload = response.read().decode("utf-8")
+                return json.loads(payload)
+            except (URLError, TimeoutError, OSError) as exc:
+                last_error = exc
+                if attempt < retries - 1:
+                    import time
+                    time.sleep(1 * (attempt + 1))  # Backoff
+                    print(f"Retry {attempt + 2}/{retries}...", file=sys.stderr)
+
+        raise RuntimeError(
+            f"Failed to fetch data after {retries} attempts. "
+            f"Check your internet connection.\nURL: {url}"
+        ) from last_error
 
     def _serialize(self, quran_data: QuranData) -> dict[str, Any]:
         serialized_surahs: list[dict[str, Any]] = []

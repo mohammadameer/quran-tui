@@ -20,6 +20,11 @@ def build_parser() -> argparse.ArgumentParser:
         description="Quran terminal app with browse, fuzzy search, and resume.",
     )
     parser.add_argument(
+        "-v", "--version",
+        action="version",
+        version=f"%(prog)s {__version__}",
+    )
+    parser.add_argument(
         "--refresh-cache",
         action="store_true",
         help="Download fresh Quran data and overwrite local cache.",
@@ -106,6 +111,7 @@ def main(argv: list[str] | None = None) -> int:
     app.run()
     return 0
 
+
 def _check_and_prompt_update() -> bool:
     update_info = check_for_update(__version__)
     if not update_info.update_available or not update_info.latest_version:
@@ -148,14 +154,14 @@ def _restart_app() -> None:
             return
         except OSError:
             pass
-    
+
     # Fallback: try running as module
     try:
         os.execv(sys.executable, [sys.executable, "-m", "quran_tui.cli", "--no-update-check", "--refresh-cache"])
         return
     except OSError:
         pass
-    
+
     print("Please run 'quran --refresh-cache' manually.", file=sys.stderr)
 
 
