@@ -388,18 +388,21 @@ class QuranTUIApplication:
 
         output.append(("", "\n"))
 
-        start = max(0, self.current_ayah_index - 4)
-        end = min(len(ayahs), start + 9)
-        start = max(0, end - 9)
+        visible_count = 7
+        half = visible_count // 2
+        start = max(0, self.current_ayah_index - half)
+        end = min(len(ayahs), start + visible_count)
+        if end == len(ayahs):
+            start = max(0, end - visible_count)
 
         if start > 0:
-            output.append(("class:muted", " ...\n\n"))
+            output.append(("class:muted", f"  ↑ {start} more verse(s) above\n\n"))
 
         main_focus = self._focus_is_main()
         for index in range(start, end):
             ayah = ayahs[index]
             is_active = index == self.current_ayah_index
-            marker = ">" if is_active else " "
+            marker = "▶" if is_active else " "
 
             arabic_style = "class:ayah"
             english_style = "class:translation"
@@ -411,14 +414,17 @@ class QuranTUIApplication:
                     arabic_style = "class:active-ayah-soft"
                     english_style = "class:active-translation-soft"
 
-            output.append((arabic_style, f"{reshape_arabic(ayah.text_arabic)}\n"))
+            arabic_text = reshape_arabic(ayah.text_arabic)
+            ayah_mark = f" ﴿{ayah.ayah_number}﴾"
+            output.append((arabic_style, f"{arabic_text}{ayah_mark}\n"))
             output.append((english_style, f"{marker} {ayah.ayah_number}. {ayah.text_english}\n\n"))
 
         if end < len(ayahs):
-            output.append(("class:muted", " ...\n"))
+            remaining = len(ayahs) - end
+            output.append(("class:muted", f"  ↓ {remaining} more verse(s) below\n"))
         else:
             output.append(("class:muted", "─" * 40 + "\n"))
-            output.append(("class:muted", f"End of Surah {surah.name_english}\n"))
+            output.append(("class:muted", f"۝ End of Surah {surah.name_english} ۝\n"))
 
         return output
 
