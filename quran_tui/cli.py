@@ -131,11 +131,23 @@ def _check_and_prompt_update() -> bool:
 
 def _restart_app() -> None:
     """Restart the app after update."""
+    # Try multiple methods to restart
     quran_path = shutil.which("quran")
     if quran_path:
-        os.execv(quran_path, ["quran", "--no-update-check"])
-    else:
-        print("Could not find quran command. Please run it manually.", file=sys.stderr)
+        try:
+            os.execv(quran_path, ["quran", "--no-update-check", "--refresh-cache"])
+            return
+        except OSError:
+            pass
+    
+    # Fallback: try running as module
+    try:
+        os.execv(sys.executable, [sys.executable, "-m", "quran_tui.cli", "--no-update-check", "--refresh-cache"])
+        return
+    except OSError:
+        pass
+    
+    print("Please run 'quran --refresh-cache' manually.", file=sys.stderr)
 
 
 if __name__ == "__main__":

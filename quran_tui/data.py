@@ -140,8 +140,8 @@ class QuranRepository:
 
     def _deserialize(self, raw: dict[str, Any]) -> QuranData:
         version = raw.get("version", 1)
-        if version not in (1, 2, 3):
-            raise ValueError("Unsupported cache format.")
+        if version < 3:
+            raise ValueError("Cache outdated, needs refresh.")
 
         surahs: list[SurahData] = []
         ayahs_flat: list[Ayah] = []
