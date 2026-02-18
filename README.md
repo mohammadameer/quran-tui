@@ -12,26 +12,21 @@ Quran terminal app with clean, fast navigation.
 - Resume from last reading.
 - Works on common terminals and systems.
 
-## One-line install (different systems)
+## One-line install
 
-Linux/macOS:
+Linux:
 ```bash
-python3 -m pip install --user pipx && python3 -m pipx ensurepath && pipx install "git+https://github.com/mohammadameer/quran-tui.git"
+(command -v apt-get >/dev/null && sudo apt-get update && sudo apt-get install -y python3 python3-pip pipx) || (command -v dnf >/dev/null && sudo dnf install -y python3 python3-pip pipx) || (command -v pacman >/dev/null && sudo pacman -Sy --noconfirm python python-pip python-pipx); python3 -m pipx ensurepath; pipx install "git+https://github.com/mohammadameer/quran-tui.git"
 ```
 
-Windows PowerShell:
+macOS:
+```bash
+brew install python pipx && pipx ensurepath && pipx install "git+https://github.com/mohammadameer/quran-tui.git"
+```
+
+Windows (PowerShell):
 ```powershell
-py -m pip install --user pipx; py -m pipx ensurepath; pipx install "git+https://github.com/mohammadameer/quran-tui.git"
-```
-
-Windows CMD:
-```bat
-py -m pip install --user pipx && py -m pipx ensurepath && pipx install "git+https://github.com/mohammadameer/quran-tui.git"
-```
-
-Local repo (dev/test):
-```bash
-pipx install .
+winget install --id Python.Python.3.12 -e --accept-source-agreements --accept-package-agreements; py -m pip install --user pipx; py -m pipx ensurepath; pipx install "git+https://github.com/mohammadameer/quran-tui.git"
 ```
 
 ## Run
@@ -57,3 +52,4 @@ quran-tui
 - First run downloads Quran text from API and caches it locally.
 - Local files are saved in `~/.quran-tui/`.
 - Old `~/.quran_tui/` data auto-migrates on next run.
+- On start, app checks for updates and asks: Enter/y to update, n to skip.

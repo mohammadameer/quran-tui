@@ -3,10 +3,12 @@ from __future__ import annotations
 import argparse
 import sys
 
+from . import __version__
 from .data import QuranRepository
 from .search import QuranSearchEngine
 from .state import ReadingStateStore
 from .ui import QuranTUIApplication
+from .update import check_for_update, run_self_update
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -24,12 +26,33 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Disable custom colors for minimal terminals.",
     )
+    parser.add_argument(
+        "--self-update",
+        action="store_true",
+        help="Update Quran TUI and exit.",
+    )
+    parser.add_argument(
+        "--no-update-check",
+        action="store_true",
+        help="Skip startup update check.",
+    )
     return parser
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
+
+    if args.self_update:
+        update_result = run_self_update()
+        stream = sys.stdout if update_result.updated else sys.stderr
+        print(update_result.message, file=stream)
+        return 0 if update_result.updated else 1
+
+    if not args.no_update_check:
+        should_exit = _check_and_prompt_update()
+        if should_exit:
+            return 0
 
     repository = QuranRepository()
     if args.refresh_cache or not repository.has_cache():
@@ -51,6 +74,36 @@ def main(argv: list[str] | None = None) -> int:
     )
     app.run()
     return 0
+
+def _check_and_prompt_update() -> bool:
+    update_info = check_for_update(__version__)
+    if not update_info.update_available or not update_info.latest_version:
+        return False
+
+    print(
+        f"Update available: {update_info.current_version} -> {update_info.latest_version}",
+        file=sys.stderr,
+    )
+
+    if not sys.stdin.isatty():
+        print("Run: pipx upgrade quran-tui", file=sys.stderr)
+        return False
+
+    try:
+        user_input = input("Press Enter or y to update now (n to skip): ").strip().lower()
+    except EOFError:
+        return False
+
+    if user_input not in ("", "y", "yes"):
+        print("Skipped update.", file=sys.stderr)
+        return False
+
+    update_result = run_self_update()
+    stream = sys.stdout if update_result.updated else sys.stderr
+    print(update_result.message, file=stream)
+    if update_result.updated:
+        print("Please run quran-tui again.", file=sys.stderr)
+    return update_result.updated
 
 
 if __name__ == "__main__":
