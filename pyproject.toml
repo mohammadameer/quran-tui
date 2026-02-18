@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "quran-tui"
+version = "0.1.0"
+description = "Quran TUI with browse, fuzzy search, and resume reading"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Quran TUI Contributors" }]
+dependencies = [
+  "prompt_toolkit",
+  "rapidfuzz",
+]
+
+[project.scripts]
+quran-tui = "quran_tui.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["quran_tui*"]
