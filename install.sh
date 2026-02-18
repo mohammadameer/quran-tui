@@ -99,7 +99,7 @@ main() {
 
   ensure_pipx
   pipx ensurepath >/dev/null || true
-  python3 -m pipx install --force "$REPO_URL"
+  pipx install --force "$REPO_URL"
   log "Installed Quran TUI."
   log "Run: quran-tui"
 }
