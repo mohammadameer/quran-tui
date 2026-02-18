@@ -14,19 +14,19 @@ Quran terminal app with clean, fast navigation.
 
 ## One-line install
 
-Linux:
+Linux/macOS:
 ```bash
-(command -v apt-get >/dev/null && sudo apt-get update && sudo apt-get install -y python3 python3-pip pipx) || (command -v dnf >/dev/null && sudo dnf install -y python3 python3-pip pipx) || (command -v pacman >/dev/null && sudo pacman -Sy --noconfirm python python-pip python-pipx); python3 -m pipx ensurepath; pipx install "git+https://github.com/mohammadameer/quran-tui.git"
-```
-
-macOS:
-```bash
-brew install python pipx && pipx ensurepath && pipx install "git+https://github.com/mohammadameer/quran-tui.git"
+curl -fsSL https://raw.githubusercontent.com/mohammadameer/quran-tui/main/install.sh | bash
 ```
 
 Windows (PowerShell):
 ```powershell
-winget install --id Python.Python.3.12 -e --accept-source-agreements --accept-package-agreements; py -m pip install --user pipx; py -m pipx ensurepath; pipx install "git+https://github.com/mohammadameer/quran-tui.git"
+iwr -useb https://raw.githubusercontent.com/mohammadameer/quran-tui/main/install.ps1 | iex
+```
+
+Windows (CMD):
+```bat
+curl -fsSL https://raw.githubusercontent.com/mohammadameer/quran-tui/main/install.cmd -o install.cmd && install.cmd && del install.cmd
 ```
 
 ## Run
