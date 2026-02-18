@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import unittest
+
 from quran_tui.models import Ayah
 from quran_tui.search import QuranSearchEngine
 
@@ -33,21 +35,24 @@ def _sample_ayahs() -> list[Ayah]:
     ]
 
 
-def test_search_finds_english_text() -> None:
-    engine = QuranSearchEngine(_sample_ayahs())
-    results = engine.search("merciful")
-    assert results
-    assert results[0].ayah.surah_number == 1
-    assert results[0].ayah.ayah_number == 1
+class QuranSearchEngineTests(unittest.TestCase):
+    def test_search_finds_english_text(self) -> None:
+        engine = QuranSearchEngine(_sample_ayahs())
+        results = engine.search("merciful")
+        self.assertTrue(results)
+        self.assertEqual(results[0].ayah.surah_number, 1)
+        self.assertEqual(results[0].ayah.ayah_number, 1)
+
+    def test_search_finds_arabic_text(self) -> None:
+        engine = QuranSearchEngine(_sample_ayahs())
+        results = engine.search("الْحَمْدُ لِلَّهِ")
+        self.assertTrue(results)
+        self.assertTrue(any(item.ayah.ayah_number == 2 for item in results))
+
+    def test_search_empty_query_returns_no_results(self) -> None:
+        engine = QuranSearchEngine(_sample_ayahs())
+        self.assertEqual(engine.search(""), [])
 
 
-def test_search_finds_arabic_text() -> None:
-    engine = QuranSearchEngine(_sample_ayahs())
-    results = engine.search("الْحَمْدُ لِلَّهِ")
-    assert results
-    assert any(item.ayah.ayah_number == 2 for item in results)
-
-
-def test_search_empty_query_returns_no_results() -> None:
-    engine = QuranSearchEngine(_sample_ayahs())
-    assert engine.search("") == []
+if __name__ == "__main__":
+    unittest.main()
