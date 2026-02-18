@@ -38,6 +38,8 @@ if %errorlevel% neq 0 (
   exit /b 1
 )
 
-echo Installed Quran TUI.
-echo Run: quran-tui
+echo Downloading Quran data...
+quran --download-data 2>nul
+
+echo Installed. Run: quran
 endlocal

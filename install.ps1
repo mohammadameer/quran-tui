@@ -36,5 +36,8 @@ Ensure-Python
 Ensure-Git
 Install-QuranTui
 
-Write-Host "Installed Quran TUI."
-Write-Host "Run: quran-tui"
+Write-Host "Downloading Quran data..."
+$env:Path = [System.Environment]::GetEnvironmentVariable("Path", "User") + ";" + $env:Path
+quran --download-data 2>$null
+
+Write-Host "Installed. Run: quran"

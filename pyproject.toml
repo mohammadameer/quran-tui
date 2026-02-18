@@ -16,7 +16,7 @@ dependencies = [
 ]
 
 [project.scripts]
-quran-tui = "quran_tui.cli:main"
+quran = "quran_tui.cli:main"
 
 [tool.setuptools.packages.find]
 include = ["quran_tui*"]

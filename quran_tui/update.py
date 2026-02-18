@@ -136,7 +136,7 @@ def run_self_update() -> UpdateResult:
 
     return UpdateResult(
         updated=False,
-        message="Update failed. Please run: pipx upgrade quran-tui",
+        message="Update failed. Please run: pipx upgrade quran",
     )
 
 
@@ -144,7 +144,7 @@ def _candidate_update_commands() -> list[list[str]]:
     commands: list[list[str]] = []
 
     if shutil.which("pipx"):
-        commands.append(["pipx", "upgrade", "quran-tui"])
+        commands.append(["pipx", "upgrade", "quran"])
         commands.append(["pipx", "install", "--force", INSTALL_SOURCE])
 
     commands.append([sys.executable, "-m", "pip", "install", "--upgrade", INSTALL_SOURCE])

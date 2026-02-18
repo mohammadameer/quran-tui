@@ -100,8 +100,10 @@ main() {
   ensure_pipx
   pipx ensurepath >/dev/null || true
   pipx install --force "$REPO_URL"
-  log "Installed Quran TUI."
-  log "Run: quran-tui"
+  export PATH="$HOME/.local/bin:$PATH"
+  log "Downloading Quran data..."
+  quran --download-data || true
+  log "Installed. Run: quran"
 }
 
 main "$@"

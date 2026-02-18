@@ -13,13 +13,18 @@ from .update import check_for_update, run_self_update
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="quran-tui",
+        prog="quran",
         description="Quran terminal app with browse, fuzzy search, and resume.",
     )
     parser.add_argument(
         "--refresh-cache",
         action="store_true",
         help="Download fresh Quran data and overwrite local cache.",
+    )
+    parser.add_argument(
+        "--download-data",
+        action="store_true",
+        help="Download Quran data and exit (used during install).",
     )
     parser.add_argument(
         "--plain",
@@ -39,6 +44,18 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def _download_data_only() -> int:
+    repository = QuranRepository()
+    print("Downloading Quran data...", file=sys.stderr)
+    try:
+        repository.load(force_refresh=not repository.has_cache())
+        print("Quran data ready.", file=sys.stderr)
+        return 0
+    except Exception as exc:
+        print(f"Failed to download: {exc}", file=sys.stderr)
+        return 1
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
@@ -48,6 +65,9 @@ def main(argv: list[str] | None = None) -> int:
         stream = sys.stdout if update_result.updated else sys.stderr
         print(update_result.message, file=stream)
         return 0 if update_result.updated else 1
+
+    if args.download_data:
+        return _download_data_only()
 
     if not args.no_update_check:
         should_exit = _check_and_prompt_update()
@@ -86,7 +106,7 @@ def _check_and_prompt_update() -> bool:
     )
 
     if not sys.stdin.isatty():
-        print("Run: pipx upgrade quran-tui", file=sys.stderr)
+        print("Run: pipx upgrade quran", file=sys.stderr)
         return False
 
     try:
@@ -102,7 +122,7 @@ def _check_and_prompt_update() -> bool:
     stream = sys.stdout if update_result.updated else sys.stderr
     print(update_result.message, file=stream)
     if update_result.updated:
-        print("Please run quran-tui again.", file=sys.stderr)
+        print("Please run quran again.", file=sys.stderr)
     return update_result.updated
 
 

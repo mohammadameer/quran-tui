@@ -32,7 +32,7 @@ curl -fsSL https://raw.githubusercontent.com/mohammadameer/quran-tui/main/instal
 ## Run
 
 ```bash
-quran-tui
+quran
 ```
 
 ## Controls
@@ -49,7 +49,7 @@ quran-tui
 
 ## Notes
 
-- First run downloads Quran text from API and caches it locally.
-- Local files are saved in `~/.quran-tui/`.
-- Old `~/.quran_tui/` data auto-migrates on next run.
-- On start, app checks for updates and asks: Enter/y to update, n to skip.
+- Install downloads Quran data automatically.
+- Local files saved in `~/.quran-tui/`.
+- Old `~/.quran_tui/` data auto-migrates.
+- On start, checks for updates (Enter/y to update, n to skip).
