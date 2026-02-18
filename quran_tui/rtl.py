@@ -3,20 +3,17 @@ from __future__ import annotations
 
 try:
     import arabic_reshaper
-    from bidi.algorithm import get_display
-    HAS_RTL_LIBS = True
+    HAS_RESHAPER = True
 except ImportError:
-    HAS_RTL_LIBS = False
+    HAS_RESHAPER = False
 
 
 def reshape_arabic(text: str) -> str:
     """Reshape Arabic text for proper terminal display.
     
-    Converts standard Arabic to presentation forms with connected glyphs,
-    then applies BiDi algorithm for correct RTL rendering.
+    Converts standard Arabic to presentation forms with connected glyphs.
     """
-    if not HAS_RTL_LIBS:
+    if not HAS_RESHAPER:
         return text
     
-    reshaped = arabic_reshaper.reshape(text)
-    return get_display(reshaped)
+    return arabic_reshaper.reshape(text)

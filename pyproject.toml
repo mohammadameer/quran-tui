@@ -14,7 +14,6 @@ dependencies = [
   "prompt_toolkit",
   "rapidfuzz",
   "arabic-reshaper",
-  "python-bidi",
 ]
 
 [project.scripts]
