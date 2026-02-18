@@ -386,38 +386,22 @@ class QuranTUIApplication:
             output.append(("class:muted", f"\n{reshape_arabic(bismillah_ar)}\n"))
             output.append(("class:muted", f"{bismillah_en}\n"))
 
-        output.append(("", "\n"))
+        ayah = ayahs[self.current_ayah_index]
+        total = len(ayahs)
+        current_num = self.current_ayah_index + 1
 
-        visible_count = 3
-        start = max(0, self.current_ayah_index - 1)
-        end = min(len(ayahs), start + visible_count)
-        if end == len(ayahs):
-            start = max(0, end - visible_count)
-
-        if start > 0:
-            output.append(("class:muted", " ...\n\n"))
+        if self.current_ayah_index > 0:
+            output.append(("class:muted", f"  ↑ Ayah {self.current_ayah_index} above (k/↑)\n\n"))
 
         main_focus = self._focus_is_main()
-        for index in range(start, end):
-            ayah = ayahs[index]
-            is_active = index == self.current_ayah_index
-            marker = ">" if is_active else " "
+        arabic_style = "class:active-ayah" if main_focus else "class:active-ayah-soft"
+        english_style = "class:active-translation" if main_focus else "class:active-translation-soft"
 
-            arabic_style = "class:ayah"
-            english_style = "class:translation"
-            if is_active:
-                if main_focus:
-                    arabic_style = "class:active-ayah"
-                    english_style = "class:active-translation"
-                else:
-                    arabic_style = "class:active-ayah-soft"
-                    english_style = "class:active-translation-soft"
+        output.append((arabic_style, f"{reshape_arabic(ayah.text_arabic)}\n"))
+        output.append((english_style, f"> {ayah.ayah_number}. {ayah.text_english}\n\n"))
 
-            output.append((arabic_style, f"{reshape_arabic(ayah.text_arabic)}\n"))
-            output.append((english_style, f"{marker} {ayah.ayah_number}. {ayah.text_english}\n\n"))
-
-        if end < len(ayahs):
-            output.append(("class:muted", " ...\n"))
+        if self.current_ayah_index < total - 1:
+            output.append(("class:muted", f"  ↓ Ayah {current_num + 1} below (j/↓)\n"))
         else:
             output.append(("class:muted", "─" * 40 + "\n"))
             output.append(("class:muted", f"End of Surah {surah.name_english}\n"))
