@@ -19,6 +19,7 @@ class SurahData:
     name_arabic: str
     name_english: str
     ayahs: list[Ayah]
+    bismillah_pre: bool = False
 
 
 @dataclass(slots=True)

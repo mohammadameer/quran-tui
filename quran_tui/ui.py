@@ -376,9 +376,17 @@ class QuranTUIApplication:
         output.append(
             (
                 "class:title",
-                f"{reshape_arabic(surah.name_arabic)}\n\n",
+                f"{reshape_arabic(surah.name_arabic)}\n",
             )
         )
+
+        if surah.bismillah_pre:
+            bismillah_ar = "بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ"
+            bismillah_en = "In the name of Allah, the Most Gracious, the Most Merciful"
+            output.append(("class:muted", f"\n{reshape_arabic(bismillah_ar)}\n"))
+            output.append(("class:muted", f"{bismillah_en}\n"))
+
+        output.append(("", "\n"))
 
         start = max(0, self.current_ayah_index - 4)
         end = min(len(ayahs), start + 9)
@@ -408,6 +416,9 @@ class QuranTUIApplication:
 
         if end < len(ayahs):
             output.append(("class:muted", " ...\n"))
+        else:
+            output.append(("class:muted", "─" * 40 + "\n"))
+            output.append(("class:muted", f"End of Surah {surah.name_english}\n"))
 
         return output
 

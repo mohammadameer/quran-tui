@@ -67,6 +67,7 @@ class QuranRepository:
             surah_number = int(chapter["id"])
             name_arabic = str(chapter["name_arabic"])
             name_english = str(chapter["name_simple"])
+            bismillah_pre = bool(chapter.get("bismillah_pre", False))
 
             print(f"Downloading surah {surah_number}/114...", file=sys.stderr, end="\r")
 
@@ -99,6 +100,7 @@ class QuranRepository:
                     name_arabic=name_arabic,
                     name_english=name_english,
                     ayahs=surah_ayahs,
+                    bismillah_pre=bismillah_pre,
                 )
             )
 
@@ -123,6 +125,7 @@ class QuranRepository:
                     "number": surah.number,
                     "name_arabic": surah.name_arabic,
                     "name_english": surah.name_english,
+                    "bismillah_pre": surah.bismillah_pre,
                     "ayahs": [
                         {
                             "ayah_number": ayah.ayah_number,
@@ -133,11 +136,11 @@ class QuranRepository:
                     ],
                 }
             )
-        return {"version": 2, "surahs": serialized_surahs}
+        return {"version": 3, "surahs": serialized_surahs}
 
     def _deserialize(self, raw: dict[str, Any]) -> QuranData:
         version = raw.get("version", 1)
-        if version not in (1, 2):
+        if version not in (1, 2, 3):
             raise ValueError("Unsupported cache format.")
 
         surahs: list[SurahData] = []
@@ -146,6 +149,7 @@ class QuranRepository:
             surah_number = int(surah_raw["number"])
             name_arabic = str(surah_raw["name_arabic"])
             name_english = str(surah_raw["name_english"])
+            bismillah_pre = bool(surah_raw.get("bismillah_pre", surah_number != 1 and surah_number != 9))
             surah_ayahs: list[Ayah] = []
             for ayah_raw in surah_raw["ayahs"]:
                 ayah = Ayah(
@@ -165,6 +169,7 @@ class QuranRepository:
                     name_arabic=name_arabic,
                     name_english=name_english,
                     ayahs=surah_ayahs,
+                    bismillah_pre=bismillah_pre,
                 )
             )
 
