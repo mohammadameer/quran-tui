@@ -16,17 +16,17 @@ Quran terminal app with clean, fast navigation.
 
 Linux/macOS:
 ```bash
-python3 -m pip install --user pipx && python3 -m pipx ensurepath && pipx install "git+https://github.com/mohammadameer/quran-cli.git"
+python3 -m pip install --user pipx && python3 -m pipx ensurepath && pipx install "git+https://github.com/mohammadameer/quran-tui.git"
 ```
 
 Windows PowerShell:
 ```powershell
-py -m pip install --user pipx; py -m pipx ensurepath; pipx install "git+https://github.com/mohammadameer/quran-cli.git"
+py -m pip install --user pipx; py -m pipx ensurepath; pipx install "git+https://github.com/mohammadameer/quran-tui.git"
 ```
 
 Windows CMD:
 ```bat
-py -m pip install --user pipx && py -m pipx ensurepath && pipx install "git+https://github.com/mohammadameer/quran-cli.git"
+py -m pip install --user pipx && py -m pipx ensurepath && pipx install "git+https://github.com/mohammadameer/quran-tui.git"
 ```
 
 Local repo (dev/test):
