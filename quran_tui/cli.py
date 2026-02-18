@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import argparse
+import os
+import shutil
 import sys
 
 from . import __version__
@@ -122,8 +124,18 @@ def _check_and_prompt_update() -> bool:
     stream = sys.stdout if update_result.updated else sys.stderr
     print(update_result.message, file=stream)
     if update_result.updated:
-        print("Please run quran again.", file=sys.stderr)
+        print("Restarting...", file=sys.stderr)
+        _restart_app()
     return update_result.updated
+
+
+def _restart_app() -> None:
+    """Restart the app after update."""
+    quran_path = shutil.which("quran")
+    if quran_path:
+        os.execv(quran_path, ["quran", "--no-update-check"])
+    else:
+        print("Could not find quran command. Please run it manually.", file=sys.stderr)
 
 
 if __name__ == "__main__":
