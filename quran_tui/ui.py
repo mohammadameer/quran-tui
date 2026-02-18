@@ -348,7 +348,7 @@ class QuranTUIApplication:
             if not is_active:
                 style = "class:surah"
 
-            line = f"{marker} {surah.number:>3}. {surah.name_arabic} | {surah.name_english}\n"
+            line = f"{marker} {surah.number:>3}. \u202B{surah.name_arabic}\u202C | {surah.name_english}\n"
             output.append((style, line))
 
         if end < len(surahs):
@@ -369,7 +369,7 @@ class QuranTUIApplication:
         output.append(
             (
                 "class:title",
-                f"Surah {surah.number} - {surah.name_arabic} ({surah.name_english})\n\n",
+                f"Surah {surah.number} - \u202B{surah.name_arabic}\u202C ({surah.name_english})\n\n",
             )
         )
 
@@ -396,7 +396,7 @@ class QuranTUIApplication:
                     arabic_style = "class:active-ayah-soft"
                     english_style = "class:active-translation-soft"
 
-            output.append((arabic_style, f"{marker} {ayah.ayah_number:>3} {ayah.text_arabic}\n"))
+            output.append((arabic_style, f"{marker} {ayah.ayah_number:>3} \u202B{ayah.text_arabic}\u202C\n"))
             output.append((english_style, f"      {ayah.text_english}\n\n"))
 
         if end < len(ayahs):
