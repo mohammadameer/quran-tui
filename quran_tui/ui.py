@@ -388,9 +388,8 @@ class QuranTUIApplication:
 
         output.append(("", "\n"))
 
-        visible_count = 7
-        half = visible_count // 2
-        start = max(0, self.current_ayah_index - half)
+        visible_count = 3
+        start = max(0, self.current_ayah_index - 1)
         end = min(len(ayahs), start + visible_count)
         if end == len(ayahs):
             start = max(0, end - visible_count)
