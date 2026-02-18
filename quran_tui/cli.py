@@ -10,6 +10,7 @@ from .data import QuranRepository
 from .search import QuranSearchEngine
 from .state import ReadingStateStore
 from .ui import QuranTUIApplication
+from .rtl import set_rtl_mode
 from .update import check_for_update, run_self_update
 
 
@@ -43,6 +44,12 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Skip startup update check.",
     )
+    parser.add_argument(
+        "--rtl-mode",
+        choices=["auto", "raw", "reshape", "bidi"],
+        default="auto",
+        help="Arabic RTL mode: auto (default), raw (native BiDi), reshape (connected only), bidi (reshape+reverse)",
+    )
     return parser
 
 
@@ -75,6 +82,8 @@ def main(argv: list[str] | None = None) -> int:
         should_exit = _check_and_prompt_update()
         if should_exit:
             return 0
+
+    set_rtl_mode(args.rtl_mode)
 
     repository = QuranRepository()
     if args.refresh_cache or not repository.has_cache():
